@@ -1,0 +1,52 @@
+{
+  "version": "0.2.0",
+  "inputs": [
+    {
+      "id": "selectProject",
+      "type": "pickString",
+      "description": "Select a project to debug",
+      "options": ["myhost", "myremote1", "myremote2"]
+    },
+    {
+      "id": "selectPort",
+      "type": "pickString",
+      "description": "Select a port to attach to",
+      "options": ["4200", "4201", "4202"]
+    }
+  ],
+  "configurations": [
+    {
+      "name": "Debug client-side",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:${input:selectPort}",
+      "webRoot": "${workspaceFolder}/${input:selectProject}"
+    },
+    {
+      "name": "Debug server-side",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "cd ../../ && nx serve ${input:selectProject}",
+      "cwd": "${workspaceFolder}/apps/${input:selectProject}"
+    },
+    {
+      "name": "Debug full stack",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "cd ../../ && nx serve ${input:selectProject}",
+      "cwd": "${workspaceFolder}/apps/${input:selectProject}",
+      "serverReadyAction": {
+        "pattern": "started server on .+, url: (https?://.+)",
+        "uriFormat": "%s",
+        "action": "debugWithEdge",
+        "webRoot": "${workspaceFolder}/apps/${input:selectProject}"
+      }
+    },
+    {
+      "type": "chrome",
+      "name": "SBH Debug",
+      "request": "launch",
+      "url": "http://localhost:9999/sbh/app/core"
+    }
+  ]
+}

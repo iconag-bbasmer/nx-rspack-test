@@ -1,0 +1,64 @@
+{
+  "name": "myremote1",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/myremote1/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "../../dist/myremote1",
+        "main": "apps/myremote1/src/main.ts",
+        "tsConfig": "apps/myremote1/tsconfig.app.json",
+        "rspackConfig": "apps/myremote1/rspack.config.js",
+        "assets": [
+          "apps/myremote1/src/favicon.ico",
+          "apps/myremote1/src/assets"
+        ]
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "apps/myremote1/rspack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "myremote1:build:development",
+        "port": 4201
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "myremote1:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "myremote1:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "myremote1:serve:development"
+        },
+        "production": {
+          "serveTarget": "myremote1:serve:production"
+        }
+      }
+    }
+  }
+}
